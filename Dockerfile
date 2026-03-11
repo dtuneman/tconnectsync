@@ -5,16 +5,13 @@ ENV LC_ALL C.UTF-8
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONFAULTHANDLER 1
 
-WORKDIR /app
-
-# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends gcc && rm -rf /var/lib/apt/lists/*
 
-# Copy and install Python dependencies
-COPY Pipfile Pipfile.lock setup.cfg setup.py pyproject.toml ./
-RUN pip install pipenv && pipenv requirements > requirements.txt && pip install -r requirements.txt
-# Copy application
+WORKDIR /app
 COPY . .
+RUN pip install --no-cache-dir -e .
 
-# Run
+RUN useradd --create-home appuser
+USER appuser
+
 ENTRYPOINT ["python3", "-u", "main.py"]
