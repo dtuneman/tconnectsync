@@ -12,8 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends gcc && rm -rf /
 
 # Copy and install Python dependencies
 COPY Pipfile Pipfile.lock setup.cfg setup.py pyproject.toml ./
-RUN pip install pipenv && pipenv install --system --deploy
-
+RUN pip install pipenv && pipenv requirements > requirements.txt && pip install -r requirements.txt
 # Copy application
 COPY . .
 
